@@ -9,7 +9,7 @@
 	display: inline-block;
 }
 
-.TagTrain-tag, .TagTrain-placeholder {
+.TagTrain-tag {
 	display: inline-block;
 
 	padding: 0 1ch;

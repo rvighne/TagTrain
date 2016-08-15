@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<title>TagTrain test</title>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="../themes/default.css">
+<script src="../src/tagtrain.js"></script>
+
+<p>Enter tags:
+
+<script>
+"use strict";
+
+var train = new TagTrain({
+	maxTags: 5
+});
+
+train.setTags(['foo', 'bar']);
+
+document.body.appendChild(train.el);
+train.takeFocus();
+</script>

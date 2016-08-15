@@ -1,0 +1,41 @@
+.TagTrain-container {
+	cursor: text;
+}
+
+.TagTrain-tag-list {
+	list-style: none;
+	margin: 0; padding: 0;
+
+	display: inline-block;
+}
+
+.TagTrain-tag, .TagTrain-placeholder {
+	display: inline-block;
+
+	padding: 0 1ch;
+	margin: 1ch;
+
+	cursor: default;
+}
+
+.TagTrain-tag {
+	border: thin solid lightgray;
+}
+
+.TagTrain-remove-btn {
+	cursor: pointer;
+	color: red;
+
+	margin-left: 1ch;
+}
+
+.TagTrain-remove-btn::after {
+	content: '\2421';
+}
+
+.TagTrain-input {
+	display: inline-block;
+
+	border: none;
+	outline: none;
+}

@@ -32,7 +32,7 @@ function TagTrain(opts) {
 	this.opts = Object.assign({}, TagTrain.defaultOpts, opts);
 	this.tags = [];
 
-	this.el = document.createElement('label');
+	this.el = document.createElement('div');
 	this.el.classList.add(TagTrain.classNames.container);
 
 	this.label = document.createElement('span');
@@ -58,6 +58,7 @@ function TagTrain(opts) {
 	};
 
 	this.el.addEventListener('click', TagTrain.removeItem.bind(this));
+	this.el.addEventListener('click', TagTrain.focusInput.bind(this));
 	this.input.addEventListener('keydown', TagTrain.tagInput.bind(this));
 }
 
@@ -71,9 +72,7 @@ TagTrain.classNames = {
 	input: 'TagTrain-input'
 };
 
-TagTrain.idPrefixes = {
-	tag: 'TagTrain-tag-'
-};
+TagTrain.idPrefix = 'TagTrain-tag-';
 
 TagTrain.defaultOpts = {
 	delimiters: [9, 13, 32, 188],
@@ -87,13 +86,13 @@ TagTrain.defaultOpts = {
 TagTrain.prototype.on = function on(event, callback) {
 	this.events[event].push(callback);
 	return this;
-};
+}
 
 TagTrain.prototype.off = function off(event, callback) {
 	var callbacks = this.events[event];
 	callbacks.splice(callbacks.indexOf(callback), 1);
 	return this;
-};
+}
 
 TagTrain.prototype.trigger = function trigger(event) {
 	var callbacks = this.events[event];
@@ -103,13 +102,13 @@ TagTrain.prototype.trigger = function trigger(event) {
 	}
 
 	return this;
-};
+}
 
 TagTrain.prototype.addTag = function addTag(value) {
 	if (value !== '' && this.tags.length < this.opts.maxTags && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
 		var item = document.createElement('li');
 		item.classList.add(TagTrain.classNames.tagItem);
-		item.id = TagTrain.idPrefixes.tag + value;
+		item.id = TagTrain.idPrefix + value;
 		item.appendChild(document.createTextNode(value));
 
 		var removeBtn = document.createElement('span');
@@ -135,10 +134,10 @@ TagTrain.prototype._removeItem = function _removeItem(item) {
 	var oldValue = this.tags.splice(
 		this.tags.indexOf(
 			item.id.slice(
-				TagTrain.idPrefixes.tag.length)), 1)[0];
+				TagTrain.idPrefix.length)), 1)[0];
 
 	this.trigger('remove-tag', oldValue).trigger('change', this.tags);
-};
+}
 
 TagTrain.prototype.removeAll = function removeAll() {
 	var oldTags = this.tags.slice();
@@ -162,12 +161,19 @@ TagTrain.prototype.setTags = function setTags(tags) {
 
 TagTrain.prototype.takeFocus = function takeFocus() {
 	this.input.select();
-};
+}
 
 /* Event handlers -- static, but must be bound to instance before registering */
 TagTrain.removeItem = function removeItem(e) {
 	if (e.target.classList.contains(TagTrain.classNames.removeBtn)) {
 		this._removeItem(e.target.parentNode);
+	}
+};
+
+TagTrain.focusInput = function focusInput(e) {
+	var sel = document.getSelection();
+	if (e.target !== this.input && (sel.isCollapsed || !sel.containsNode(this.el, true))) {
+		this.input.select();
 	}
 };
 

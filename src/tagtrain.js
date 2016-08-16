@@ -44,6 +44,13 @@ function TagTrain(opts) {
 	this.input.classList.add(TagTrain.classNames.input);
 	this.el.appendChild(this.input);
 
+	this.events = {
+		'add-tag': [],
+		'remove-tag': [],
+		'remove-all': [],
+		'change': []
+	};
+
 	this.el.addEventListener('click', TagTrain.removeItem.bind(this));
 	this.el.addEventListener('click', TagTrain.focusInput.bind(this));
 	this.input.addEventListener('keydown', TagTrain.tagInput.bind(this));
@@ -72,6 +79,26 @@ TagTrain._getItemIndex = function _getItemIndex(item) {
 }
 
 /* Instance methods */
+TagTrain.prototype.on = function on(event, callback) {
+	this.events[event].push(callback);
+	return this;
+}
+
+TagTrain.prototype.off = function off(event, callback) {
+	var callbacks = this.events[event];
+	callbacks.splice(callbacks.indexOf(callback), 1);
+	return this;
+}
+
+TagTrain.prototype.trigger = function trigger(event, data) {
+	var callbacks = this.events[event];
+	for (var i = 0; i < callbacks.length; ++i) {
+		callbacks[i].call(this, data);
+	}
+
+	return this;
+}
+
 TagTrain.prototype.addTag = function addTag(value) {
 	if (value !== '' && this.tagCount < this.opts.maxTags && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
 		var item = document.createElement('li');
@@ -88,6 +115,8 @@ TagTrain.prototype.addTag = function addTag(value) {
 		this.tags.push(value);
 		++this.tagCount;
 
+		this.trigger('add-tag', value).trigger('change', this.tags);
+
 		return true;
 	} else {
 		return false;
@@ -97,17 +126,27 @@ TagTrain.prototype.addTag = function addTag(value) {
 // Used internally
 TagTrain.prototype._removeItem = function _removeItem(item) {
 	this.tagList.removeChild(item);
-	delete this.tags[TagTrain._getItemIndex(item)];
+
+	var index = TagTrain._getItemIndex(item);
+	var value = this.tags[index];
+	delete this.tags[index];
+
 	--this.tagCount;
+
+	this.trigger('remove-tag', value).trigger('change', this.tags);
 }
 
 TagTrain.prototype.removeAll = function removeAll() {
+	var oldTags = this.tags.slice();
+
 	var child;
 	while (child = this.tagList.lastChild) {
 		this.tagList.removeChild(child);
 	}
 
 	this.tags.length = this.tagCount = 0;
+
+	this.trigger('remove-all', oldTags).trigger('change', this.tags);
 };
 
 TagTrain.prototype.setTags = function setTags(tags) {

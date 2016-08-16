@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="../themes/default.css">
 <script src="../src/tagtrain.js"></script>
 
-<div id="tags-wrapper"></div>
+<span id="tags-label">Enter tags: </span>
 
 <p id="log">Events will appear here.</p>
 
@@ -14,13 +14,17 @@
 
 /* Initialize TagTrain */
 var train = new TagTrain({
-	maxTags: 5,
-	labelText: "Enter tags: "
+	maxTags: 5
 });
 
 train.setTags(['foo', 'bar']);
 
-document.getElementById('tags-wrapper').appendChild(train.el);
+var tagsLabel = document.getElementById('tags-label');
+tagsLabel.addEventListener('click', function () {
+	train.takeFocus();
+});
+
+document.body.insertBefore(train.el, tagsLabel.nextSibling);
 train.takeFocus();
 
 /* Event handling/logging */

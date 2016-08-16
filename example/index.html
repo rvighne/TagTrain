@@ -28,6 +28,8 @@ var log = document.getElementById('log');
 train.on('add-tag', function (tag) {
 	log.textContent = 'Added: ' + tag;
 }).on('remove-tag', function (tag) {
-	log.textContent = 'Removed: ' + tag;
+	log.textContent = 'Deleted: ' + tag;
+}).on('reject-tag', function (tag) {
+	log.textContent = 'Rejected: ' + tag;
 });
 </script>

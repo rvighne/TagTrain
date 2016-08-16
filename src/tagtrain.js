@@ -52,6 +52,7 @@ function TagTrain(opts) {
 
 	this.events = {
 		'add-tag': [],
+		'reject-tag': [],
 		'remove-tag': [],
 		'remove-all': [],
 		'change': []
@@ -120,9 +121,9 @@ TagTrain.prototype.addTag = function addTag(value) {
 		this.tags.push(value);
 
 		this.trigger('add-tag', value).trigger('change', this.tags);
-
 		return true;
 	} else {
+		this.trigger('reject-tag', value);
 		return false;
 	}
 };

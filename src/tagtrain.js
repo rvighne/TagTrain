@@ -35,13 +35,6 @@ function TagTrain(opts) {
 	this.el = document.createElement('div');
 	this.el.classList.add(TagTrain.classNames.container);
 
-	this.label = document.createElement('span');
-	if (this.opts.labelText) {
-		this.label.classList.add(TagTrain.classNames.label);
-		this.label.appendChild(document.createTextNode(this.opts.labelText));
-		this.el.appendChild(this.label);
-	}
-
 	this.tagList = document.createElement('ul');
 	this.tagList.classList.add(TagTrain.classNames.tagList);
 	this.el.appendChild(this.tagList);
@@ -67,21 +60,19 @@ function TagTrain(opts) {
 /* Static properties */
 TagTrain.classNames = {
 	container: 'TagTrain-container',
-	label: 'TagTrain-label',
 	tagList: 'TagTrain-tag-list',
 	tagItem: 'TagTrain-tag',
 	removeBtn: 'TagTrain-remove-btn',
 	input: 'TagTrain-input'
 };
 
-TagTrain.idPrefix = 'TagTrain-tag-';
+TagTrain.tagIdPrefix = 'TagTrain-tag-';
 
 TagTrain.defaultOpts = {
 	delimiters: [9, 13, 32, 188],
 	removeLast: 8,
 	invalidTag: /\W/,
-	maxTags: Infinity,
-	labelText: ""
+	maxTags: Infinity
 };
 
 /* Instance methods */
@@ -110,7 +101,7 @@ TagTrain.prototype.addTag = function addTag(value) {
 	if (value !== '' && this.tags.length < this.opts.maxTags && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
 		var item = document.createElement('li');
 		item.classList.add(TagTrain.classNames.tagItem);
-		item.id = TagTrain.idPrefix + value;
+		item.id = TagTrain.tagIdPrefix + value;
 		item.appendChild(document.createTextNode(value));
 
 		var removeBtn = document.createElement('span');
@@ -136,7 +127,7 @@ TagTrain.prototype._removeItem = function _removeItem(item) {
 	var oldValue = this.tags.splice(
 		this.tags.indexOf(
 			item.id.slice(
-				TagTrain.idPrefix.length)), 1)[0];
+				TagTrain.tagIdPrefix.length)), 1)[0];
 
 	this.trigger('remove-tag', oldValue).trigger('change', this.tags);
 };

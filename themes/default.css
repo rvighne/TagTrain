@@ -15,11 +15,9 @@
 	padding: 0 1ch;
 	margin: 1ch;
 
-	cursor: default;
-}
-
-.TagTrain-tag {
 	border: thin solid lightgray;
+
+	cursor: default;
 }
 
 .TagTrain-remove-btn {

@@ -5,18 +5,17 @@
 <link rel="stylesheet" href="../themes/default.css">
 <script src="../src/tagtrain.js"></script>
 
-<p>Enter tags:
-
 <div id="tags-wrapper"></div>
 
-<p id="log">Events will appear here.
+<p id="log">Events will appear here.</p>
 
 <script>
 "use strict";
 
 /* Initialize TagTrain */
 var train = new TagTrain({
-	maxTags: 5
+	maxTags: 5,
+	labelText: "Enter tags: "
 });
 
 train.setTags(['foo', 'bar']);

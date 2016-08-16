@@ -35,6 +35,13 @@ function TagTrain(opts) {
 	this.el = document.createElement('label');
 	this.el.classList.add(TagTrain.classNames.container);
 
+	this.label = document.createElement('span');
+	if (this.opts.labelText) {
+		this.label.classList.add(TagTrain.classNames.label);
+		this.label.appendChild(document.createTextNode(this.opts.labelText));
+		this.el.appendChild(this.label);
+	}
+
 	this.tagList = document.createElement('ul');
 	this.tagList.classList.add(TagTrain.classNames.tagList);
 	this.el.appendChild(this.tagList);
@@ -57,6 +64,7 @@ function TagTrain(opts) {
 /* Static properties */
 TagTrain.classNames = {
 	container: 'TagTrain-container',
+	label: 'TagTrain-label',
 	tagList: 'TagTrain-tag-list',
 	tagItem: 'TagTrain-tag',
 	removeBtn: 'TagTrain-remove-btn',
@@ -71,7 +79,8 @@ TagTrain.defaultOpts = {
 	delimiters: [9, 13, 32, 188],
 	removeLast: 8,
 	invalidTag: /\W/,
-	maxTags: Infinity
+	maxTags: Infinity,
+	labelText: ""
 };
 
 /* Instance methods */
@@ -86,10 +95,11 @@ TagTrain.prototype.off = function off(event, callback) {
 	return this;
 };
 
-TagTrain.prototype.trigger = function trigger(event, data) {
+TagTrain.prototype.trigger = function trigger(event) {
 	var callbacks = this.events[event];
+	var data = Array.prototype.slice.call(arguments, 1);
 	for (var i = 0; i < callbacks.length; ++i) {
-		callbacks[i].call(this, data);
+		callbacks[i].apply(this, data);
 	}
 
 	return this;

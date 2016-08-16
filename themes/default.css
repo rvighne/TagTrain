@@ -34,4 +34,7 @@
 .TagTrain-input {
 	border: none;
 	outline: none;
+	font: inherit;
+
+	all: unset; /* Very little browser support */
 }

@@ -61,6 +61,7 @@ function TagTrain(opts) {
 	this.el.addEventListener('click', TagTrain.removeItem.bind(this));
 	this.el.addEventListener('click', TagTrain.focusInput.bind(this));
 	this.input.addEventListener('keydown', TagTrain.tagInput.bind(this));
+	this.input.addEventListener('input', TagTrain.resizeInput.bind(this));
 }
 
 /* Static properties */
@@ -87,13 +88,13 @@ TagTrain.defaultOpts = {
 TagTrain.prototype.on = function on(event, callback) {
 	this.events[event].push(callback);
 	return this;
-}
+};
 
 TagTrain.prototype.off = function off(event, callback) {
 	var callbacks = this.events[event];
 	callbacks.splice(callbacks.indexOf(callback), 1);
 	return this;
-}
+};
 
 TagTrain.prototype.trigger = function trigger(event) {
 	var callbacks = this.events[event];
@@ -103,7 +104,7 @@ TagTrain.prototype.trigger = function trigger(event) {
 	}
 
 	return this;
-}
+};
 
 TagTrain.prototype.addTag = function addTag(value) {
 	if (value !== '' && this.tags.length < this.opts.maxTags && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
@@ -138,7 +139,7 @@ TagTrain.prototype._removeItem = function _removeItem(item) {
 				TagTrain.idPrefix.length)), 1)[0];
 
 	this.trigger('remove-tag', oldValue).trigger('change', this.tags);
-}
+};
 
 TagTrain.prototype.removeAll = function removeAll() {
 	var oldTags = this.tags.slice();
@@ -174,7 +175,7 @@ TagTrain.removeItem = function removeItem(e) {
 TagTrain.focusInput = function focusInput(e) {
 	var sel = document.getSelection();
 	if (e.target !== this.input && (sel.isCollapsed || !sel.containsNode(this.el, true))) {
-		this.input.select();
+		this.takeFocus();
 	}
 };
 
@@ -183,9 +184,14 @@ TagTrain.tagInput = function tagInput(e) {
 		e.preventDefault();
 		if (this.addTag(this.input.value)) {
 			this.input.value = '';
+			this.input.size = 1;
 		}
 	} else if (e.keyCode === this.opts.removeLast && this.input.selectionStart === 0 && this.input.selectionStart === this.input.selectionEnd) {
 		e.preventDefault();
 		this._removeItem(this.tagList.lastChild);
 	}
+};
+
+TagTrain.resizeInput = function resizeInput() {
+	this.input.size = Math.max(this.input.value.length, 1);
 };

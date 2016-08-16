@@ -7,15 +7,28 @@
 
 <p>Enter tags:
 
+<div id="tags-wrapper"></div>
+
+<p id="log">Events will appear here.
+
 <script>
 "use strict";
 
+/* Initialize TagTrain */
 var train = new TagTrain({
 	maxTags: 5
 });
 
 train.setTags(['foo', 'bar']);
 
-document.body.appendChild(train.el);
+document.getElementById('tags-wrapper').appendChild(train.el);
 train.takeFocus();
+
+/* Event handling/logging */
+var log = document.getElementById('log');
+train.on('add-tag', function (tag) {
+	log.textContent = 'Added: ' + tag;
+}).on('remove-tag', function (tag) {
+	log.textContent = 'Removed: ' + tag;
+});
 </script>

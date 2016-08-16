@@ -31,7 +31,6 @@ if (typeof Object.assign !== 'function') {
 function TagTrain(opts) {
 	this.opts = Object.assign({}, TagTrain.defaultOpts, opts);
 	this.tags = [];
-	this.tagCount = 0;
 
 	this.el = document.createElement('div');
 	this.el.classList.add(TagTrain.classNames.container);
@@ -74,10 +73,6 @@ TagTrain.defaultOpts = {
 	maxTags: Infinity
 };
 
-TagTrain._getItemIndex = function _getItemIndex(item) {
-	return parseInt(item.id.slice(TagTrain.idPrefix.length), 10);
-}
-
 /* Instance methods */
 TagTrain.prototype.on = function on(event, callback) {
 	this.events[event].push(callback);
@@ -100,10 +95,10 @@ TagTrain.prototype.trigger = function trigger(event, data) {
 }
 
 TagTrain.prototype.addTag = function addTag(value) {
-	if (value !== '' && this.tagCount < this.opts.maxTags && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
+	if (value !== '' && this.tags.length < this.opts.maxTags && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
 		var item = document.createElement('li');
 		item.classList.add(TagTrain.classNames.tagItem);
-		item.id = TagTrain.idPrefix + this.tags.length;
+		item.id = TagTrain.idPrefix + value;
 		item.appendChild(document.createTextNode(value));
 
 		var removeBtn = document.createElement('span');
@@ -113,7 +108,6 @@ TagTrain.prototype.addTag = function addTag(value) {
 		this.tagList.appendChild(item);
 
 		this.tags.push(value);
-		++this.tagCount;
 
 		this.trigger('add-tag', value).trigger('change', this.tags);
 
@@ -127,13 +121,12 @@ TagTrain.prototype.addTag = function addTag(value) {
 TagTrain.prototype._removeItem = function _removeItem(item) {
 	this.tagList.removeChild(item);
 
-	var index = TagTrain._getItemIndex(item);
-	var value = this.tags[index];
-	delete this.tags[index];
+	var oldValue = this.tags.splice(
+		this.tags.indexOf(
+			item.id.slice(
+				TagTrain.idPrefix.length)), 1)[0];
 
-	--this.tagCount;
-
-	this.trigger('remove-tag', value).trigger('change', this.tags);
+	this.trigger('remove-tag', oldValue).trigger('change', this.tags);
 }
 
 TagTrain.prototype.removeAll = function removeAll() {
@@ -144,7 +137,7 @@ TagTrain.prototype.removeAll = function removeAll() {
 		this.tagList.removeChild(child);
 	}
 
-	this.tags.length = this.tagCount = 0;
+	this.tags.length = 0;
 
 	this.trigger('remove-all', oldTags).trigger('change', this.tags);
 };

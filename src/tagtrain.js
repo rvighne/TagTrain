@@ -120,7 +120,6 @@ TagTrain.prototype.addTag = function addTag(value) {
 	}
 };
 
-// Used internally
 TagTrain.prototype._removeItem = function _removeItem(item) {
 	this.tagList.removeChild(item);
 
@@ -143,6 +142,10 @@ TagTrain.prototype.removeAll = function removeAll() {
 	this.tags.length = 0;
 
 	this.trigger('remove-all', oldTags).trigger('change', this.tags);
+};
+
+TagTrain.prototype.getTags = function getTags() {
+	return Array.prototype.slice.call(this.tags);
 };
 
 TagTrain.prototype.setTags = function setTags(tags) {

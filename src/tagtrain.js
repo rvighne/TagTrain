@@ -41,6 +41,9 @@ function TagTrain(opts) {
 
 	this.input = document.createElement('input');
 	this.input.classList.add(TagTrain.classNames.input);
+	if (this.opts.maxTagLen !== Infinity) {
+		this.input.maxLength = this.opts.maxTagLen;
+	}
 	this.el.appendChild(this.input);
 
 	this.events = {
@@ -72,6 +75,7 @@ TagTrain.defaultOpts = {
 	delimiters: [9, 13, 32, 188],
 	removeLast: 8,
 	invalidTag: /\W/,
+	maxTagLen: Infinity,
 	maxTags: Infinity
 };
 
@@ -98,7 +102,7 @@ TagTrain.prototype.trigger = function trigger(event) {
 };
 
 TagTrain.prototype.addTag = function addTag(value) {
-	if (value !== '' && this.tags.length < this.opts.maxTags && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
+	if (value !== '' && this.tags.length < this.opts.maxTags && value.length <= this.opts.maxTagLen && !this.opts.invalidTag.test(value) && this.tags.indexOf(value) === -1) {
 		var item = document.createElement('li');
 		item.classList.add(TagTrain.classNames.tagItem);
 		item.id = TagTrain.tagIdPrefix + value;

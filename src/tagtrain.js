@@ -112,7 +112,7 @@ TagTrain.prototype.addTag = function addTag(value) {
 
 		this.tags.push(value);
 
-		this.trigger('add-tag', value).trigger('change', this.tags);
+		this.trigger('add-tag', value).trigger('change');
 		return true;
 	} else {
 		this.trigger('reject-tag', value);
@@ -128,7 +128,7 @@ TagTrain.prototype._removeItem = function _removeItem(item) {
 			item.id.slice(
 				TagTrain.tagIdPrefix.length)), 1)[0];
 
-	this.trigger('remove-tag', oldValue).trigger('change', this.tags);
+	this.trigger('remove-tag', oldValue).trigger('change');
 };
 
 TagTrain.prototype.removeAll = function removeAll() {
@@ -141,7 +141,7 @@ TagTrain.prototype.removeAll = function removeAll() {
 
 	this.tags.length = 0;
 
-	this.trigger('remove-all', oldTags).trigger('change', this.tags);
+	this.trigger('remove-all', oldTags).trigger('change');
 };
 
 TagTrain.prototype.getTags = function getTags() {

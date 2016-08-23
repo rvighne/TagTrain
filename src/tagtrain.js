@@ -161,7 +161,7 @@ TagTrain.prototype.setTags = function setTags(tags) {
 
 TagTrain.prototype.takeFocus = function takeFocus() {
 	this.input.select();
-}
+};
 
 /* Event handlers -- static, but must be bound to instance before registering */
 TagTrain.removeItem = function removeItem(e) {
